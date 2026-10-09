@@ -12,3 +12,12 @@ for arquivo in caminho_org.iterdir():
     if arquivo.suffix == cdir.suffix:
         cdir.mkdir(exist_ok=True, parents=True)
 
+# Movendo arquivos
+for arquivo in caminho_org.iterdir():
+    cfile = pathlib.Path(arquivo)
+    cdir = pathlib.Path(f"pasta/subpasta{arquivo.suffix}")
+    cf = str(cfile)
+    cd = str(cdir)
+    if arquivo.suffix == cdir.suffix:
+        if not cf in cd:
+            shutil.move(cfile, cdir)
