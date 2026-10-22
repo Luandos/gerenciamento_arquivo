@@ -25,13 +25,6 @@ for arquivo in caminho_org.iterdir():
     cf = str(cfile)
     cd = str(cdir)
     if arquivo.suffix == cdir.suffix:
-        print("cf =", cf)
-        print("cd =", cd)
-        print("cfile =", cfile)
-        print("cdir =", cdir)
-        print("arquvo = ", arquivo.name)
-        print("cf in cd =", cf in cd)
-        print("Nomezao = ", cdir/arquivo.name )
         if not ((cdir/arquivo.name).exists):
             shutil.move(cfile, cdir)
     cont += 1
