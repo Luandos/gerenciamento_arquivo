@@ -1,38 +1,28 @@
-import datetime
 import shutil
-import pathlib
-import datetime
+from pathlib import Path
+from datetime import datetime
 
-cont = 0
-lista_ext=[]
-rglog = pathlib.Path("registro.log")
-rglog.touch()
-shutil.unpack_archive("organizador.zip", "organizador")
-caminho_org = pathlib.Path("organizador")
+pasta_organizada = Path("pastas_organizados")
+reg_log = Path("registro.log")
+arquivos_qtd = 0
+ext_encontradas = list()
 
-# criando pastas
-for arquivo in caminho_org.iterdir():
-    cdir = pathlib.Path(f"pasta/subpasta{arquivo.suffix}")
-    print(arquivo.name)
-    print(cdir.suffix)
-    if arquivo.suffix == cdir.suffix:
-        cdir.mkdir(exist_ok=True, parents=True)
+for arquivo in Path('organizador').iterdir():
+    
+    extensao = arquivo.suffix[1:]
+    if extensao not in ext_encontradas:
+        ext_encontradas.append(extensao)
 
-# Movendo arquivos
-for arquivo in caminho_org.iterdir():
-    cfile = pathlib.Path(arquivo)
-    cdir = pathlib.Path(f"pasta/subpasta{arquivo.suffix}")
-    cf = str(cfile)
-    cd = str(cdir)
-    if arquivo.suffix == cdir.suffix:
-        if not ((cdir/arquivo.name).exists):
-            shutil.move(cfile, cdir)
-    cont += 1
-    if not arquivo.suffix in lista_ext:
-        lista_ext.append(arquivo.suffix)
-    reg = open("registro.log")
-    with open("registro.log", 'a', encoding='utf-8') as reg:
-        hora = datetime.datetime.now().strftime("%d/%m/%y %H:%M")
-        reg.write(f"{hora}, {arquivo.name} to {cdir.name} \n")
-print(cont)
-print(lista_ext)
+    subpasta = pasta_organizada/extensao
+    if not subpasta.exists():
+        subpasta.mkdir(exist_ok=True, parents=True)
+        
+    shutil.copy(arquivo, subpasta/arquivo.name)
+    with open(reg_log, 'a', encoding='utf-8') as log:
+        agora = datetime.now()
+        log.write(agora.strftime(f"%d/%m/%Y %H:%M:%S Movido o arquivo {arquivo.name} para a pasta {subpasta}\n"))
+    arquivos_qtd += 1
+print(f"{arquivos_qtd} arquivos foram organizados")
+print("Extensões encontradas:")
+for extensao in ext_encontradas:
+    print(extensao)
